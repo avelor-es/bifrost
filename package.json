@@ -1,0 +1,45 @@
+{
+  "name": "@avelor/bifrost",
+  "version": "0.1.0",
+  "description": "WebSocket tunnel relay — serve from a server, connect from anywhere",
+  "main": "src/relay.js",
+  "bin": {
+    "bifrost": "./bin/bifrost.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node bin/bifrost.js",
+    "test": "node --test test/tokens.test.js test/config.test.js test/relay.test.js test/cli.test.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "author": "Avelor <cruz@avelor.es>",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "tunnel",
+    "relay",
+    "websocket",
+    "ngrok",
+    "self-hosted",
+    "proxy"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/avelor-es/bifrost"
+  },
+  "homepage": "https://github.com/avelor-es/bifrost#readme",
+  "bugs": {
+    "url": "https://github.com/avelor-es/bifrost/issues"
+  }
+}
