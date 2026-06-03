@@ -1,6 +1,6 @@
 {
   "name": "@avelor/bifrost",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "WebSocket tunnel relay — serve from a server, connect from anywhere",
   "main": "src/relay.js",
   "bin": {

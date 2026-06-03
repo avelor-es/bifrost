@@ -88,16 +88,41 @@ function textPage(code, message) {
 
 // Detect preferred format from URL extension first, then Accept header.
 function detectFormat(url, accept) {
-  if (url.endsWith('.json')) return 'json';
-  if (url.endsWith('.xml'))  return 'xml';
-  if (url.endsWith('.txt'))  return 'txt';
+  const pathname = (url || '').split('?')[0];
+  if (pathname.endsWith('.json')) return 'json';
+  if (pathname.endsWith('.xml'))  return 'xml';
+  if (pathname.endsWith('.txt'))  return 'txt';
 
   const a = accept || '';
-  if (a.includes('application/json') || a.includes('text/json'))             return 'json';
-  if (a.includes('application/xml')  || a.includes('text/xml'))              return 'xml';
-  if (a.includes('text/plain') && !a.includes('text/html'))                  return 'txt';
+  if (!a) return 'html';
 
-  return 'html';
+  const FORMATS = {
+    'text/html':        'html',
+    'application/xhtml+xml': 'html',
+    'application/json': 'json',
+    'text/json':        'json',
+    'application/xml':  'xml',
+    'text/xml':         'xml',
+    'text/plain':       'txt',
+  };
+
+  let best = null;
+  let bestQ = -1;
+
+  for (const part of a.split(',')) {
+    const [rawType, ...params] = part.trim().split(';');
+    const type = rawType.trim().toLowerCase();
+    const qParam = params.find(p => p.trim().startsWith('q='));
+    const q = qParam ? parseFloat(qParam.trim().slice(2)) : 1;
+
+    const fmt = FORMATS[type];
+    if (fmt && q > bestQ) {
+      best  = fmt;
+      bestQ = q;
+    }
+  }
+
+  return best || 'html';
 }
 
 const CONTENT_TYPES = {
@@ -116,7 +141,7 @@ function errorResponse(res, status, req) {
              : format === 'txt'  ? textPage(status, message)
              :                     htmlPage(status, message);
 
-  res.writeHead(status, { 'Content-Type': CONTENT_TYPES[format] });
+  res.writeHead(status, { 'Content-Type': CONTENT_TYPES[format], 'Vary': 'Accept' });
   res.end(body);
 }
 
