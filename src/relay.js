@@ -130,9 +130,14 @@ function serve(port, host) {
 
       const clientIp  = req.socket.remoteAddress;
       const forwarded = req.headers['x-forwarded-for'];
+      const originalHost = req.headers.host;
+      const originalProto = req.headers['x-forwarded-proto'] || 'https';
+
       const headers   = {
         ...req.headers,
         'x-forwarded-for': forwarded ? `${forwarded}, ${clientIp}` : clientIp,
+        'x-forwarded-host': originalHost,
+        'x-forwarded-proto': originalProto,
       };
 
       const msg = {
